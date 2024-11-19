@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+           <head>
+           <meta charset="UTF-8">
+                         <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                    <title>Biblioteca Virtual</title>
+                                    <style>
+body {
+font-family:
+	Arial, sans-serif;
+background-color:
+#f4f4f4;
+	margin: 0;
+	padding: 20px;
+}
+.container {
+	max-width: 900px;
+	margin: 0 auto;
+background-color:
+#fff;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+h1 {
+text-align:
+	center;
+	margin-bottom: 20px;
+}
+input, textarea, button {
+	width: 100%;
+	padding: 10px;
+	margin: 10px 0;
+box-sizing:
+	border-box;
+	border-radius: 4px;
+	border: 1px solid #ccc;
+}
+button {
+background-color:
+#4CAF50;
+color:
+	white;
+border:
+	none;
+cursor:
+	pointer;
+}
+button:
+hover {
+background-color:
+#45a049;
+}
+.book-list {
+	margin-top: 20px;
+}
+.book-item {
+	border-bottom: 1px solid #ddd;
+	padding: 10px 0;
+}
+.book-item:
+last-child {
+border-bottom:
+	none;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+	           <h1>Biblioteca Virtual</h1>
+
+	           <!-- Cadastro de Livros -->
+	           <h2>Cadastro de Livros</h2>
+	           <input type="text" id="titulo" placeholder="TC-tulo do Livro">
+	                                 <input type="text" id="autor" placeholder="Autor do Livro">
+	                                         <input type="number" id="ano" placeholder="Ano de PublicaC'C#o">
+	                                                 <input type="text" id="genero" placeholder="GC*nero (Ex: FicC'C#o, Romance)">
+	                                                         <button onclick="cadastrarLivro()">Cadastrar Livro</button>
+
+	                                                                 <!-- Busca de Livros -->
+	                                                                 <h2>Busca de Livros</h2>
+	                                                                 <input type="text" id="buscar" placeholder="Digite o tC-tulo ou gC*nero">
+	                                                                         <button onclick="buscarLivro()">Buscar</button>
+	                                                                                 <div id="resultadosBusca"></div>
+
+	                                                                                         <!-- Lista de Livros Cadastrados -->
+	                                                                                         <h2>Livros Cadastrados</h2>
+	                                                                                         <div id="livrosCadastrados" class="book-list"></div>
+		                                                                                                 </div>
+
+		                                                                                                 <script>
+	// Banco de dados simulado
+		                                                                                                 let livros = JSON.parse(localStorage.getItem("livros")) || [];
+
+// FunC'C#o para cadastrar livro
+function cadastrarLivro() {
+	const titulo = document.getElementById("titulo").value.trim();
+	const autor = document.getElementById("autor").value.trim();
+	const ano = document.getElementById("ano").value.trim();
+	const genero = document.getElementById("genero").value.trim();
+
+	if (titulo && autor && ano && genero) {
+		const livro = { titulo, autor, ano, genero };
+		livros.push(livro);
+		localStorage.setItem("livros", JSON.stringify(livros)); // Salvar no LocalStorage
+		alert("Livro cadastrado com sucesso!");
+		mostrarLivros();
+		limparCampos();
+	} else {
+		alert("Por favor, preencha todos os campos.");
+	}
+}
+
+// FunC'C#o para limpar os campos apC3s cadastro
+function limparCampos() {
+	document.getElementById("titulo").value = '';
+	document.getElementById("autor").value = '';
+	document.getElementById("ano").value = '';
+	document.getElementById("genero").value = '';
+}
+
+// FunC'C#o para mostrar os livros cadastrados
+function mostrarLivros() {
+	const listaLivros = document.getElementById("livrosCadastrados");
+	listaLivros.innerHTML = ''; // Limpa a lista
+
+	livros.forEach((livro, index) => {
+		const div = document.createElement("div");
+		div.classList.add("book-item");
+		div.innerHTML = `
+                <strong>TC-tulo:
+		                </strong> $ {livro.titulo}<br>
+                <strong>Autor:
+		                </strong> $ {livro.autor}<br>
+                <strong>Ano:
+		                </strong> $ {livro.ano}<br>
+                <strong>GC*nero:
+		                </strong> $ {livro.genero}<br>
+		                <button onclick="removerLivro(${index})">Remover</button>
+		                                `;
+		listaLivros.appendChild(div);
+	});
+}
+
+// FunC'C#o para buscar livro pelo tC-tulo ou gC*nero
+function buscarLivro() {
+	const busca = document.getElementById("buscar").value.toLowerCase();
+	const resultados = livros.filter(
+	                       livro => livro.titulo.toLowerCase().includes(busca) || livro.genero.toLowerCase().includes(busca)
+	                   );
+
+	const resultadosBusca = document.getElementById("resultadosBusca");
+	resultadosBusca.innerHTML = ''; // Limpa os resultados anteriores
+
+	if (resultados.length > 0) {
+		resultados.forEach(livro => {
+			const div = document.createElement("div");
+			div.classList.add("book-item");
+			div.innerHTML = `
+                <strong>TC-tulo:
+			                </strong> $ {livro.titulo}<br>
+                <strong>Autor:
+			                </strong> $ {livro.autor}<br>
+                <strong>Ano:
+			                </strong> $ {livro.ano}<br>
+                <strong>GC*nero:
+			                </strong> $ {livro.genero}<br>
+			                `;
+			const sqlite3 = require('sqlite3').verbose();
+			const path = require('path');
+
+// Caminho do banco de dados
+			const dbPath = path.resolve(__dirname, './data/biblioteca.db');
+
+// CriaC'C#o da conexC#o com o banco de dados
+			const db = new sqlite3.Database(dbPath, (err) => {
+				if (err) {
+					console.error('Erro ao conectar ao banco de dados:', err.message);
+				} else {
+					console.log('ConexC#o com o banco de dados SQLite estabelecida.');
+				}
+			});
+
+// CriaC'C#o da tabela (caso nC#o exista)
+			db.serialize(() => {
+				db.run(`
+				       CREATE TABLE IF NOT EXISTS livros (
+				           id INTEGER PRIMARY KEY AUTOINCREMENT,
+				           titulo TEXT NOT NULL,
+				           autor TEXT NOT NULL,
+				           ano INTEGER NOT NULL,
+				           genero TEXT NOT NULL
+				       )
+				`, (err) => {
+					if (err) {
+						console.error('Erro ao criar a tabela:', err.message);
+					} else {
+						console.log('Tabela "livros" verificada/criada com sucesso.');
+					}
+				});
+			});
+
+			module.exports = db;
+
+
+			resultadosBusca.appendChild(div);
+		});
+	} else {
+		resultadosBusca.innerHTML = `<p>Nenhum livro encontrado.</p>`;
+	}
+}
+
+// FunC'C#o para remover livro
+function removerLivro(index) {
+	livros.splice(index, 1);
+	localStorage.setItem("livros", JSON.stringify(livros)); // Atualizar no LocalStorage
+	alert("Livro removido com sucesso!");
+	mostrarLivros();
+}
+
+
+
+// Mostrar livros ao carregar a pC!gina
+mostrarLivros();
+</script>
+
+</body>
+</html>
